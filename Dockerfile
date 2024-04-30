@@ -5,7 +5,7 @@ ENV PROJECT_NAME httpserver-spring
 #定义工作目录
 ENV WORK_PATH /usr/src/$PROJECT_NAME
 #将源码复制到当前目录
-COPY ./* $WORK_PATH
+COPY ./src ./pom.xml $WORK_PATH
 WORKDIR $WORK_PATH
 #编译构建
 RUN mvn clean package -U -DskipTests
