@@ -1,0 +1,14 @@
+server:
+  port: 9094
+  tomcat:
+    max-connections: 10240
+    threads:
+      max: 500
+      min-spare: 50
+  shutdown: graceful
+
+spring:
+  application:
+    name: httpserver-spring
+  lifecycle:
+    timeout-per-shutdown-phase: 10s

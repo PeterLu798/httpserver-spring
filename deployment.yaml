@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpserver-spring-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpserver-spring
+  template:
+    metadata:
+      labels:
+        app: httpserver-spring
+    spec:
+      containers:
+        - name: httpserver-spring
+          image: belllu/httpserver-spring:v1.0.0
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9094
+            initialDelaySeconds: 10 #初始探测时延迟10秒再进行探活，下同
+            periodSeconds: 5 #检测周期为5秒，下同
+            failureThreshold: 3 #探活失败几次标记为失败，默认为3，下同
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9094
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9094
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpserver-spring
+spec:
+  ports:
+    - port: 9094
+      protocol: TCP
+      targetPort: 9094
+  selector:
+    app: httpserver-spring
